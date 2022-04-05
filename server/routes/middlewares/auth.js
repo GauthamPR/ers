@@ -1,9 +1,19 @@
 const passport = require("passport");
-const bcrypt = require("bcrypt");
 const LocalStrategy = require("passport-local");
 const { Users } = require("../../database");
 const { logger } = require("../../utils");
 const { ObjectID } = require("mongodb");
+const ethUtil = require("ethereumjs-util");
+
+function verifySignature(address, signature, message) {
+  const sig = ethUtil.fromRpcSig(ethUtil.addHexPrefix(signature));
+  const msg = ethUtil.hashPersonalMessage(Buffer.from(message));
+  const publicKey = ethUtil.ecrecover(msg, sig.v, sig.r, sig.s);
+  const pubAddress = ethUtil.pubToAddress(publicKey);
+  const recoveredAddress = ethUtil.addHexPrefix(pubAddress.toString("hex"));
+  if (recoveredAddress == address) return true;
+  else return false;
+}
 
 module.exports = {
   setStrategies: function (app) {
@@ -33,9 +43,9 @@ module.exports = {
             if (!user) {
               return done(null, false, { message: "User Not Registered" });
             }
-            // if (!bcrypt.compareSync(signature, user.password)) {
-            //   return done(null, false, { message: "Wrong Password" });
-            // }
+
+            if (verifySignature(publicAddress, signature, process.env.SECRET_MESSAGE) == false)
+              return done(null, false, { message: "Signature not matching" });
             return done(null, user);
           });
         }
