@@ -45,8 +45,8 @@ module.exports = {
               return done(null, false, { message: "User Not Registered" });
             }
 
-            if (verifySignature(publicAddress, signature, "something") == false)
-              return done(null, false, { message: "Signature not matching " });
+            if (verifySignature(publicAddress, signature, process.env.SECRET_MESSAGE) == false)
+              return done(null, false, { message: "Signature not matching" });
             return done(null, user);
           });
         }
