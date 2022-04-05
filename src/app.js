@@ -1,9 +1,10 @@
 import React from "react";
-import Main from "./js/components/main.js"; 
+import Main from "./js/components/main.js";
 
 // states
 const CLEAN = "CLEAN";
 const META_INSTALLED = "META_INSTALLED";
+const LOGGED_IN = "LOGGED_IN";
 
 //errors
 const META_NOT_FOUND = "META_NOT_FOUND";
@@ -26,39 +27,14 @@ class App extends React.Component {
 
     this.state = { status: CLEAN, account: null };
     this.setAccount = this.setAccount.bind(this);
-    // this.getDirectoryContents = this.getDirectoryContents.bind(this);
-    // if ("serviceWorker" in navigator) {
-    //     window.addEventListener("load", function() {
-    //       navigator.serviceWorker
-    //         .register("/serviceWorker.js")
-    //         .catch(err => console.log("Unable to register Service Worker", err))
-    //     })
-    // }
-
-    // HERE COMES START CODE
-
-    // COULD BE USEFUL
-    // ---------------
-    // window.onpopstate = function(event){
-    //     let newAddress = decodeURI(window.location.pathname);
-    //     props.setAddress(newAddress.slice(1, newAddress.length), false);
-    // }
+    this.setLogin = this.setLogin.bind(this);
   }
 
-  // getDirectoryContents(){
-  //     fetch('/getDirectory/' + [...this.props.tree, this.props.currentDirectory].join('/'))
-  //     .then(response=>response.json())
-  //     .then(data=>{
-  //         if(data.error)
-  //             this.props.setError(data.error);
-  //         else
-  //             this.props.loadContent(data);
-  //     })
-  // }
-  // componentDidUpdate(prevProps){
-  //     if(prevProps.currentDirectory != this.props.currentDirectory || prevProps.tree != this.props.tree)
-  //         this.getDirectoryContents();
-  // }
+  setLogin() {
+    this.setState({
+      status: LOGGED_IN,
+    });
+  }
   setAccount(account) {
     this.setState({
       account,
@@ -78,17 +54,15 @@ class App extends React.Component {
   render() {
     return (
       <div id="react-root" style={{ fontFamily: "inherit" }}>
-        {/* <Navbar 
-                    tree={this.props.tree}
-                    pushHistory={this.props.pushHistory}
-                    currentDirectory={this.props.currentDirectory}
-                    goBack={this.props.goBack}
-                    setAddress={this.props.setAddress}
-                /> */}
         {this.state.status == CLEAN ? (
           <Loading />
         ) : !this.state.err ? (
-          <Main setAccount={this.setAccount} />
+          <Main
+            account={this.state.account}
+            status={this.state.status}
+            setAccount={this.setAccount}
+            setLogin={this.setLogin}
+          />
         ) : (
           <ErrorScreen err={this.state.err} />
         )}
