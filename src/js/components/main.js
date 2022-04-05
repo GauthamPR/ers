@@ -22,21 +22,27 @@ class Main extends React.Component {
       disableLoginButton: true,
     });
     try {
+      let sign = await ethereum.request({
+        method: "personal_sign",
+        params: [process.env.SECRET_MESSAGE, this.props.account],
+        from: this.props.account,
+      });
       let res = await axios({
         method: "post",
         url: "/api/login",
         data: {
           publicAddress: this.props.account,
-          signature: "sign",
+          signature: sign,
         },
       });
-      if(res.status == 200){
-          this.props.setLogin();
+      if (res.status == 200) {
+        this.props.setLogin();
       }
     } catch (err) {
       console.log(err.response !== undefined ? err.response.data.error : err);
     }
   }
+
   async connectToMetaMask() {
     this.setState({
       disableConnectButton: true,
