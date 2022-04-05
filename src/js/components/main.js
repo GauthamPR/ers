@@ -4,6 +4,33 @@ import axios from "axios";
 const NOT_CONNECTED = "NOT_CONNECTED";
 const CONNECTED = "CONNECTED";
 
+function makeId(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+function signMsg(account) {
+  return new Promise((resolve, reject) => {
+    ethereum.request(
+      {
+        method: "personal_sign",
+        params: ["something", account],
+        from: account,
+      },
+      (err, data) => {
+        if (err) return reject(err);
+        resolve(data.result);
+      }
+    );
+  });
+}
+
 class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -22,21 +49,27 @@ class Main extends React.Component {
       disableLoginButton: true,
     });
     try {
+      let sign = await ethereum.request({
+        method: "personal_sign",
+        params: ["something", this.props.account],
+        from: this.props.account,
+      });
       let res = await axios({
         method: "post",
         url: "/api/login",
         data: {
           publicAddress: this.props.account,
-          signature: "sign",
+          signature: sign,
         },
       });
-      if(res.status == 200){
-          this.props.setLogin();
+      if (res.status == 200) {
+        this.props.setLogin();
       }
     } catch (err) {
       console.log(err.response !== undefined ? err.response.data.error : err);
     }
   }
+
   async connectToMetaMask() {
     this.setState({
       disableConnectButton: true,
