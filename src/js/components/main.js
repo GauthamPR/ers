@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 
+import AnswerSheetUploader from "./AnswerSheetUploader";
+
 const NOT_CONNECTED = "NOT_CONNECTED";
 const CONNECTED = "CONNECTED";
 
@@ -22,9 +24,13 @@ class Main extends React.Component {
       disableLoginButton: true,
     });
     try {
+      let nonceRes = await axios({
+        method: "get",
+        url: "/api/login/" + this.props.account,
+      });
       let sign = await ethereum.request({
         method: "personal_sign",
-        params: [process.env.SECRET_MESSAGE, this.props.account],
+        params: [nonceRes.data.nonce, this.props.account],
         from: this.props.account,
       });
       let res = await axios({
@@ -54,6 +60,21 @@ class Main extends React.Component {
     });
   }
 
+  async componentDidMount() {
+    let accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    if (accounts && accounts[0]) {
+      this.props.setAccount(accounts[0]);
+      this.setState({
+        status: CONNECTED,
+      });
+      try {
+        let myself = await axios.get("/api/myself");
+        this.props.setLogin();
+      } catch (err) {
+      }
+    }
+  }
+
   render() {
     return (
       <main style={{ margin: 20 }}>
@@ -66,14 +87,18 @@ class Main extends React.Component {
           </button>
         ) : (
           <div>
-            <div>Connected</div>
-            {this.props.status != "LOGGED_IN" && (
-              <button
-                disabled={this.state.disableLoginButton}
-                onClick={this.login}
-              >
-                Login
-              </button>
+            {this.props.status == "LOGGED_IN" ? (
+              <AnswerSheetUploader />
+            ) : (
+              <div>
+                <div>Connected</div>
+                <button
+                  disabled={this.state.disableLoginButton}
+                  onClick={this.login}
+                >
+                  Login
+                </button>
+              </div>
             )}
           </div>
         )}

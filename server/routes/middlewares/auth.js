@@ -5,6 +5,17 @@ const { logger } = require("../../utils");
 const { ObjectID } = require("mongodb");
 const ethUtil = require("ethereumjs-util");
 
+function makeNonce(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 function verifySignature(address, signature, message) {
   const sig = ethUtil.fromRpcSig(ethUtil.addHexPrefix(signature));
   const msg = ethUtil.hashPersonalMessage(Buffer.from(message));
@@ -15,6 +26,12 @@ function verifySignature(address, signature, message) {
   else return false;
 }
 
+function updateNonce(userID) {
+  Users.findByIdAndUpdate(userID, { nonce: makeNonce(20) }, (err, user) => {
+    if (err) logger.error(err);
+    logger.info("Updated nonce for:", userID);
+  });
+}
 module.exports = {
   setStrategies: function (app) {
     passport.serializeUser((user, done) => {
@@ -44,8 +61,9 @@ module.exports = {
               return done(null, false, { message: "User Not Registered" });
             }
 
-            if (verifySignature(publicAddress, signature, process.env.SECRET_MESSAGE) == false)
+            if (verifySignature(publicAddress, signature, user.nonce) == false)
               return done(null, false, { message: "Signature not matching" });
+            updateNonce(user._id);
             return done(null, user);
           });
         }

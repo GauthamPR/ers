@@ -9,8 +9,8 @@ const LOGGED_IN = "LOGGED_IN";
 //errors
 const META_NOT_FOUND = "META_NOT_FOUND";
 
-function Loading() {
-  return <h1>Loading....</h1>;
+function InstallPrompt() {
+  return <h1>Metamask not found. Please install metamask.</h1>;
 }
 class ErrorScreen extends React.Component {
   constructor(props) {
@@ -31,6 +31,7 @@ class App extends React.Component {
   }
 
   setLogin() {
+    console.trace();
     this.setState({
       status: LOGGED_IN,
     });
@@ -55,7 +56,7 @@ class App extends React.Component {
     return (
       <div id="react-root" style={{ fontFamily: "inherit" }}>
         {this.state.status == CLEAN ? (
-          <Loading />
+          <InstallPrompt />
         ) : !this.state.err ? (
           <Main
             account={this.state.account}
