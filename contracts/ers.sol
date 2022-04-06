@@ -4,7 +4,7 @@ contract ers {
     struct Task {
     string student_id_hash;
     string answer_sheet_hash;
-    type public_addr_uploader;
+    address public_addr_uploader;
     
   }
     mapping(string => Task) public tasks;
