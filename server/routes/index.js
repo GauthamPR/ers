@@ -1,9 +1,9 @@
 const genericRoutes = require('./genericRoutes');
 const userRoutes = require('./userRoutes');
 
-module.exports = function(app){
-    genericRoutes(app);
-    userRoutes(app);
+module.exports = function(app, contract){
+    genericRoutes(app, contract);
+    userRoutes(app, contract);
 
     app.route('/files/*')
     .get((req, res)=>{

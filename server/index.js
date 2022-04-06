@@ -6,6 +6,7 @@ const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const mongoose = require("mongoose");
 // require('./services/mail/index.js');
+const contractor = require("./contractor");
 const routes = require("./routes");
 const auth = require("./routes/middlewares/auth");
 const logger = require("./utils/log");
@@ -35,11 +36,11 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
-
+  .then(async () => {
+    let contract = await contractor.deployContract();
     logger.info("NODE_ENV:", process.env.NODE_ENV);
     auth.setStrategies(app);
-    routes(app);
+    routes(app, contract);
 
     app.listen(process.env.PORT || 3000, () =>
       logger.log("listening on Port", process.env.PORT)

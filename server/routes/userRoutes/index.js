@@ -3,13 +3,13 @@ const fileMgr = require("../../utils/fileMgr");
 const respondError = require("../routesUtils/respondError");
 const usersCtrl = require("../../controller/usersCtrl");
 
-module.exports = function (app) {
+module.exports = function (app, contract) {
   app.route("/api/answerSheet").put(ensure.authenticated, (req, res) => {
     fileMgr.store.single("answerSheet")(req, res, async (err) => {
       if (err) return respondError(err, res);
       try {
         req.body.file = req.file;
-        let result = await usersCtrl.addAnswerSheet(req.body, req.user);
+        let result = await usersCtrl.addAnswerSheet(contract, req.body, req.user);
         res.status(200).json({ result });
       } catch (err) {
         respondError(err, res);

@@ -1,5 +1,5 @@
-var ers = artifacts.require("./ers.sol");
+let ERS = artifacts.require("./ERS.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(ers);
+  deployer.deploy(ERS);
 };
