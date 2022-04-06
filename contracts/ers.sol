@@ -10,8 +10,8 @@ contract ers {
   }
     mapping(uint => Task) public tasks;
 
-    function createTask(string memory _content) public {
+    function createTask(string student_id_hash) public {
     taskCount ++;
-    tasks[taskCount] = Task(taskCount, _content, false);
+    tasks[taskCount] = Task(taskCount,stdId_hash,ans_heet_hash,pub_addr);
 }
 }
