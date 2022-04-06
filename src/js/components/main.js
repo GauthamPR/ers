@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 
+import FileUploader from "./FileUploader";
+
 const NOT_CONNECTED = "NOT_CONNECTED";
 const CONNECTED = "CONNECTED";
 
@@ -24,7 +26,7 @@ class Main extends React.Component {
     try {
       let nonceRes = await axios({
         method: "get",
-        url: "/api/login/"+this.props.account
+        url: "/api/login/" + this.props.account,
       });
       let sign = await ethereum.request({
         method: "personal_sign",
@@ -70,14 +72,18 @@ class Main extends React.Component {
           </button>
         ) : (
           <div>
-            <div>Connected</div>
-            {this.props.status != "LOGGED_IN" && (
-              <button
-                disabled={this.state.disableLoginButton}
-                onClick={this.login}
-              >
-                Login
-              </button>
+            {this.props.status != "LOGGED_IN" ? (
+              <div>
+                <div>Connected</div>
+                <button
+                  disabled={this.state.disableLoginButton}
+                  onClick={this.login}
+                >
+                  Login
+                </button>
+              </div>
+            ) : (
+              <FileUploader />
             )}
           </div>
         )}
