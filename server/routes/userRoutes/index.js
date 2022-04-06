@@ -1,7 +1,7 @@
 const ensure = require("../middlewares/ensure");
 const fileMgr = require("../../utils/fileMgr");
 const respondError = require("../routesUtils/respondError");
-const usersCtrl = require("../../controller/usersCtrl")
+const usersCtrl = require("../../controller/usersCtrl");
 
 module.exports = function (app) {
   app.route("/api/answerSheet").put(ensure.authenticated, (req, res) => {
@@ -24,14 +24,26 @@ module.exports = function (app) {
     });
   });
 
-  app
-    .route("/api/exams")
-    .get(ensure.authenticated, async (req, res) => {
-      try {
-        let exams = await usersCtrl.getExams();
-        res.status(200).json({exams});
-      } catch (err) {
-        respondError(err, res);
-      }
-    });
+  app.route("/api/exams").get(ensure.authenticated, async (req, res) => {
+    try {
+      let exams = await usersCtrl.getExams();
+      res.status(200).json({ exams });
+    } catch (err) {
+      respondError(err, res);
+    }
+  });
+
+  app.route("/api/myself").get(ensure.authenticated, async (req, res) => {
+    try {
+      res
+        .status(200)
+        .json({
+          publicAddress: req.user.publicAddress,
+          name: req.user.name,
+          permissions: req.user.permissions,
+        });
+    } catch (err) {
+      respondError(err, res);
+    }
+  });
 };

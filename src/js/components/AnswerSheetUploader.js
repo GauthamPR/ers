@@ -9,6 +9,7 @@ class AnswerSheetUploader extends Component {
     selectedExamId: "",
     exams: [],
     enableUploadBtn: false,
+    buttonText: "Upload"
   };
 
   attemptEnableUploadBtn = () => {
@@ -39,9 +40,13 @@ class AnswerSheetUploader extends Component {
   };
 
   // On file upload (click the upload button)
-  onFileUpload = () => {
+  onFileUpload = async() => {
     // Create an object of formData
     const formData = new FormData();
+    this.setState({
+      buttonText: "Uploading....",
+      enableUploadBtn: false
+    })
 
     // Update the formData object
     formData.append(
@@ -61,7 +66,10 @@ class AnswerSheetUploader extends Component {
 
     // Request made to the backend api
     // Send formData object
-    axios.put("api/answerSheet", formData);
+    let res = await axios.put("api/answerSheet", formData);
+    this.setState({
+      buttonText: "Upload successful"
+    })
   };
 
   // File content to be displayed after
@@ -101,7 +109,7 @@ class AnswerSheetUploader extends Component {
     return (
       <div>
         <h1>Upload answer sheets</h1>
-        <div>
+        <div id="uploader">
           <label>
             Answer Sheet
             <input type="file" onChange={this.onFileChange} />
@@ -132,12 +140,14 @@ class AnswerSheetUploader extends Component {
               value={this.state.studentRollNo}
             />
           </label>
-          <button
-            disabled={!this.state.enableUploadBtn}
-            onClick={this.onFileUpload}
-          >
-            Upload
-          </button>
+          <label>
+            <button
+              disabled={!this.state.enableUploadBtn}
+              onClick={this.onFileUpload}
+            >
+              {this.state.buttonText}
+            </button>
+          </label>
         </div>
         {/* {this.fileData()} */}
       </div>
