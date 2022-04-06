@@ -8,9 +8,10 @@ const UserSchema = new mongoose.Schema({
 });
 
 const ExamSchema = new mongoose.Schema({
-  id: Number,
   name: String,
+  month: String,
   year: Number,
+  type: String,
   reviewers: [String],
 });
 

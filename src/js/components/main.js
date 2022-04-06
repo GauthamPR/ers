@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-import FileUploader from "./FileUploader";
+import AnswerSheetUploader from "./AnswerSheetUploader";
 
 const NOT_CONNECTED = "NOT_CONNECTED";
 const CONNECTED = "CONNECTED";
@@ -83,7 +83,7 @@ class Main extends React.Component {
                 </button>
               </div>
             ) : (
-              <FileUploader />
+              <AnswerSheetUploader />
             )}
           </div>
         )}
