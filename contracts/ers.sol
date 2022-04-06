@@ -3,11 +3,10 @@ contract ers {
     uint public taskCount = 0;
 
     struct Task {
-    uint student_id_hash;
-    uint answer_sheet_hash;
-    uint public_addr_uploader;
-    string content;
-    bool completed;
+    string student_id_hash;
+    string answer_sheet_hash;
+    type public_addr_uploader;
+    
   }
     mapping(uint => Task) public tasks;
 
