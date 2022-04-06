@@ -22,9 +22,13 @@ class Main extends React.Component {
       disableLoginButton: true,
     });
     try {
+      let nonceRes = await axios({
+        method: "get",
+        url: "/api/login/"+this.props.account
+      });
       let sign = await ethereum.request({
         method: "personal_sign",
-        params: [process.env.SECRET_MESSAGE, this.props.account],
+        params: [nonceRes.data.nonce, this.props.account],
         from: this.props.account,
       });
       let res = await axios({
