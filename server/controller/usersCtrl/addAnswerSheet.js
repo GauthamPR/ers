@@ -3,9 +3,8 @@ const hashFile = require("../../utils/hashFile");
 const hashString = require("../../utils/hashString");
 
 module.exports = async function (contract, body, user) {
-  let ret =
-    "File: <" + body.file.filename + "> uploaded by:" + user.publicAddress;
-  logger.info(ret);
+    
+  logger.info("File: <" + body.file.filename + "> uploaded by:" + user.publicAddress);
   let answerSheetHash = await hashFile(body.file.path);
   await contract.ers.createCode(
     body.examId,
@@ -14,6 +13,6 @@ module.exports = async function (contract, body, user) {
     user.publicAddress,
     { from: contract.account }
   );
-  ret = await contract.ers.codes(answerSheetHash);
+  let ret = await contract.ers.codes(answerSheetHash);
   return ret;
 };

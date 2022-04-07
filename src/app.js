@@ -31,7 +31,6 @@ class App extends React.Component {
   }
 
   setLogin() {
-    console.trace();
     this.setState({
       status: LOGGED_IN,
     });

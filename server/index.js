@@ -37,7 +37,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(async () => {
-    let contract = await contractor.deployContract();
+    let contract = await contractor.getDeployedContract();
     logger.info("NODE_ENV:", process.env.NODE_ENV);
     auth.setStrategies(app);
     routes(app, contract);
