@@ -142,6 +142,7 @@ class AnswerSheetUploader extends Component {
           </label>
           <label>
             <button
+              className="blue-btn"
               disabled={!this.state.enableUploadBtn}
               onClick={this.onFileUpload}
             >

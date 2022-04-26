@@ -1,71 +1,52 @@
 import React from "react";
-import Main from "./js/components/main.js";
 
-// states
-const CLEAN = "CLEAN";
-const META_INSTALLED = "META_INSTALLED";
-const LOGGED_IN = "LOGGED_IN";
+import WalletConnector from "./js/components/WalletConnector.js";
+import ErrorScreen from "./js/components/ErrorScreen.js";
 
-//errors
-const META_NOT_FOUND = "META_NOT_FOUND";
-
-function InstallPrompt() {
-  return <h1>Metamask not found. Please install metamask.</h1>;
-}
-class ErrorScreen extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return <h1>{this.props.err}</h1>;
-  }
-}
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { status: CLEAN, account: null };
+    this.state = { status: null, account: null, user: null, err: null };
+    this.setError = this.setError.bind(this);
     this.setAccount = this.setAccount.bind(this);
-    this.setLogin = this.setLogin.bind(this);
+    this.setUser = this.setUser.bind(this);
   }
 
-  setLogin() {
+  // Action to be set error for app (passed as props)
+  setError(err) {
     this.setState({
-      status: LOGGED_IN,
+      err,
     });
   }
+
+  // Action to be performed on event: wallet_connection
   setAccount(account) {
     this.setState({
       account,
     });
   }
-  componentDidMount() {
-    if (window.ethereum) {
-      this.setState({
-        status: META_INSTALLED,
-      });
-    } else {
-      this.setState({
-        err: META_NOT_FOUND,
-      });
-    }
+
+  // Action to be performed on event: login
+  setUser(user) {
+    this.setState({
+      user,
+    });
   }
+
   render() {
     return (
       <div id="react-root" style={{ fontFamily: "inherit" }}>
-        {this.state.status == CLEAN ? (
-          <InstallPrompt />
-        ) : !this.state.err ? (
-          <Main
-            account={this.state.account}
-            status={this.state.status}
-            setAccount={this.setAccount}
-            setLogin={this.setLogin}
-          />
-        ) : (
-          <ErrorScreen err={this.state.err} />
+        {this.state.err && (
+          <ErrorScreen err={this.state.err} setError={this.setError} />
         )}
+        <WalletConnector
+          account={this.state.account}
+          user={this.state.user}
+          setAccount={this.setAccount}
+          setUser={this.setUser}
+          setError={this.setError}
+        />
       </div>
     );
   }

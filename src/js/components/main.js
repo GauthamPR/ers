@@ -3,36 +3,38 @@ import axios from "axios";
 
 import AnswerSheetUploader from "./AnswerSheetUploader";
 
-const NOT_CONNECTED = "NOT_CONNECTED";
-const CONNECTED = "CONNECTED";
-
 class Main extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      status: NOT_CONNECTED,
-      disableConnectButton: false,
+      loggedIn: null,
       disableLoginButton: false,
     };
 
-    this.connectToMetaMask = this.connectToMetaMask.bind(this);
     this.login = this.login.bind(this);
   }
+
   async login() {
     this.setState({
       disableLoginButton: true,
     });
+
     try {
+      // Get nonce of the particular public address
       let nonceRes = await axios({
         method: "get",
         url: "/api/login/" + this.props.account,
       });
+
+      // Sign nonce and public address with private key
       let sign = await ethereum.request({
         method: "personal_sign",
         params: [nonceRes.data.nonce, this.props.account],
         from: this.props.account,
       });
+
+      // Send the signature
       let res = await axios({
         method: "post",
         url: "/api/login",
@@ -41,67 +43,52 @@ class Main extends React.Component {
           signature: sign,
         },
       });
+
+      // If signature valid set user details to state
       if (res.status == 200) {
-        this.props.setLogin();
+        this.setState({ loggedIn: true });
+        this.props.setUser(res.data);
       }
     } catch (err) {
-      console.log(err.response !== undefined ? err.response.data.error : err);
+      this.setState({ loggedIn: false });
+      this.props.setError(
+        err.response !== undefined ? err.response.data.error : err
+      );
     }
   }
 
-  async connectToMetaMask() {
-    this.setState({
-      disableConnectButton: true,
-    });
-    let accounts = await ethereum.request({ method: "eth_requestAccounts" });
-    this.props.setAccount(accounts[0]);
-    this.setState({
-      status: CONNECTED,
-    });
-  }
-
   async componentDidMount() {
-    let accounts = await ethereum.request({ method: "eth_requestAccounts" });
-    if (accounts && accounts[0]) {
-      this.props.setAccount(accounts[0]);
-      this.setState({
-        status: CONNECTED,
+    try {
+      let res = await axios({
+        method: "get",
+        url: "/api/myself",
       });
-      try {
-        let myself = await axios.get("/api/myself");
-        this.props.setLogin();
-      } catch (err) {
-      }
+      this.setState({ loggedIn: true });
+      this.props.setUser(res.data);
+    } catch (err) {
+      this.props.setError({
+        name: "Unauthorized",
+        message: "Please login to continue",
+      });
     }
   }
 
   render() {
     return (
       <main style={{ margin: 20 }}>
-        {this.state.status != CONNECTED ? (
-          <button
-            disabled={this.state.disableConnectButton}
-            onClick={this.connectToMetaMask}
-          >
-            Connect
-          </button>
-        ) : (
-          <div>
-            {this.props.status == "LOGGED_IN" ? (
-              <AnswerSheetUploader />
-            ) : (
-              <div>
-                <div>Connected</div>
-                <button
-                  disabled={this.state.disableLoginButton}
-                  onClick={this.login}
-                >
-                  Login
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+        <div>
+          {this.state.loggedIn ? (
+            <AnswerSheetUploader />
+          ) : (
+            <button
+              className="blue-btn"
+              disabled={this.state.disableLoginButton}
+              onClick={this.login}
+            >
+              Login
+            </button>
+          )}
+        </div>
       </main>
     );
   }

@@ -19,7 +19,7 @@ body{
 #uploader > label > select{
     margin: 0px 10px 0px 10px;
 }
-button {
+.blue-btn {
   border: none;
   color: #fff;
   background-color: #037dd6;
