@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-import AnswerSheetUploader from "./AnswerSheetUploader";
+import NavBar from "./NavBar";
 
 class Main extends React.Component {
   constructor(props) {
@@ -73,25 +74,36 @@ class Main extends React.Component {
     }
   }
 
+  componentDidUpdate(){
+      if (this.state.loggedIn) this.props.navigate("/answer-sheet");
+  }
+
   render() {
     return (
-      <main style={{ margin: 20 }}>
-        <div>
-          {this.state.loggedIn ? (
-            <AnswerSheetUploader />
-          ) : (
-            <button
-              className="blue-btn"
-              disabled={this.state.disableLoginButton}
-              onClick={this.login}
-            >
-              Login
-            </button>
-          )}
-        </div>
-      </main>
+      <React.Fragment>
+        <main style={{ margin: 20, marginTop: 60 }}>
+          <div>
+            {!this.state.loggedIn && (
+              <button
+                className="blue-btn"
+                disabled={this.state.disableLoginButton}
+                onClick={this.login}
+              >
+                Login
+              </button>
+            )}
+          </div>
+        </main>
+      </React.Fragment>
     );
   }
 }
 
-export default Main;
+function withHook(Component) {
+  return function WrappedComponent(props) {
+    let navigate = useNavigate();
+    return <Component {...props} navigate={navigate} />;
+  };
+}
+
+export default withHook(Main);

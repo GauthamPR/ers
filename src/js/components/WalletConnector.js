@@ -1,6 +1,6 @@
 import React from "react";
 
-import Main from "./main";
+import { useNavigate } from "react-router-dom";
 
 const META_NOT_FOUND = "META_NOT_FOUND";
 
@@ -22,7 +22,6 @@ class WalletConnector extends React.Component {
     super(props);
 
     this.state = {
-      walletConnected: null,
       walletInstalled: null,
       disableConnectButton: null,
     };
@@ -35,9 +34,6 @@ class WalletConnector extends React.Component {
     });
     let accounts = await ethereum.request({ method: "eth_requestAccounts" });
     this.props.setAccount(accounts[0]);
-    this.setState({
-      walletConnected: true,
-    });
   }
 
   async componentDidMount() {
@@ -62,25 +58,22 @@ class WalletConnector extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.props.account) this.props.navigate("/login");
+  }
+
   render() {
     return (
       <React.Fragment>
         {this.state.walletInstalled ? (
           <React.Fragment>
-            {this.state.walletConnected ? (
+            {!this.props.account && (
               <button
                 disabled={this.state.disableConnectButton}
                 onClick={this.connectToWallet}
               >
                 Connect
               </button>
-            ) : (
-              <Main
-                account={this.props.account}
-                user={this.props.user}
-                setUser={this.props.setUser}
-                setError={this.props.setError}
-              />
             )}
           </React.Fragment>
         ) : (
@@ -91,4 +84,11 @@ class WalletConnector extends React.Component {
   }
 }
 
-export default WalletConnector;
+function withHook(Component) {
+  return function WrappedComponent(props) {
+    let navigate = useNavigate();
+    return <Component {...props} navigate={navigate} />;
+  };
+}
+
+export default withHook(WalletConnector);

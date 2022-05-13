@@ -2,15 +2,19 @@ import axios from "axios";
 import React, { Component } from "react";
 
 class AnswerSheetUploader extends Component {
-  state = {
-    // Initially, no file is selected
-    selectedFile: null,
-    studentRollNo: "",
-    selectedExamId: "",
-    exams: [],
-    enableUploadBtn: false,
-    buttonText: "Upload"
-  };
+  constructor(props){
+    super(props);
+    
+    this.state = {
+      // Initially, no file is selected
+      selectedFile: null,
+      studentRollNo: "",
+      selectedExamId: "",
+      exams: [],
+      enableUploadBtn: false,
+      buttonText: "Upload",
+    };
+  }
 
   attemptEnableUploadBtn = () => {
     if (
@@ -40,13 +44,13 @@ class AnswerSheetUploader extends Component {
   };
 
   // On file upload (click the upload button)
-  onFileUpload = async() => {
+  onFileUpload = async () => {
     // Create an object of formData
     const formData = new FormData();
     this.setState({
       buttonText: "Uploading....",
-      enableUploadBtn: false
-    })
+      enableUploadBtn: false,
+    });
 
     // Update the formData object
     formData.append(
@@ -68,8 +72,8 @@ class AnswerSheetUploader extends Component {
     // Send formData object
     let res = await axios.put("api/answerSheet", formData);
     this.setState({
-      buttonText: "Upload successful"
-    })
+      buttonText: "Upload successful",
+    });
   };
 
   // File content to be displayed after
@@ -101,57 +105,64 @@ class AnswerSheetUploader extends Component {
   // };
 
   async componentDidMount() {
-    let res = await axios.get("/api/exams");
-    this.setState({ exams: res.data.exams });
+    if(this.props.user){
+      let res = await axios.get("/api/exams");
+      this.setState({ exams: res.data.exams });
+    }
   }
 
   render() {
     return (
-      <div>
-        <h1>Upload answer sheets</h1>
-        <div id="uploader">
-          <label>
-            Answer Sheet
-            <input type="file" onChange={this.onFileChange} />
-          </label>
-          <label>
-            Exam
-            <select onChange={this.onExamChange}>
-              <option value="">None</option>
-              {this.state.exams.map((exam) => (
-                <option key={exam._id} value={exam._id}>
-                  {exam.name +
-                    "-" +
-                    exam.month +
-                    " " +
-                    exam.year +
-                    "(" +
-                    exam.type +
-                    ")"}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Student Roll No
-            <input
-              type="text"
-              onChange={this.onStudentRollNoChange}
-              value={this.state.studentRollNo}
-            />
-          </label>
-          <label>
-            <button
-              className="blue-btn"
-              disabled={!this.state.enableUploadBtn}
-              onClick={this.onFileUpload}
-            >
-              {this.state.buttonText}
-            </button>
-          </label>
-        </div>
-        {/* {this.fileData()} */}
-      </div>
+      <React.Fragment>
+        {this.props.user &&
+          this.props.user.permissions.indexOf("answer_sheet_upload") != -1 && (
+            <div>
+              <h1>Upload answer sheets</h1>
+              <div id="uploader">
+                <label>
+                  Answer Sheet
+                  <input type="file" onChange={this.onFileChange} />
+                </label>
+                <label>
+                  Exam
+                  <select onChange={this.onExamChange}>
+                    <option value="">None</option>
+                    {this.state.exams.map((exam) => (
+                      <option key={exam._id} value={exam._id}>
+                        {exam.name +
+                          "-" +
+                          exam.month +
+                          " " +
+                          exam.year +
+                          "(" +
+                          exam.type +
+                          ")"}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Student Roll No
+                  <input
+                    type="text"
+                    onChange={this.onStudentRollNoChange}
+                    value={this.state.studentRollNo}
+                  />
+                </label>
+                <label>
+                  <button
+                    className="blue-btn"
+                    disabled={!this.state.enableUploadBtn}
+                    onClick={this.onFileUpload}
+                  >
+                    {this.state.buttonText}
+                  </button>
+                </label>
+              </div>
+              {/* {this.fileData()} */}
+            </div>
+          )}
+      </React.Fragment>
     );
   }
 }
