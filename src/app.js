@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 
 import WalletConnector from "./js/components/WalletConnector.js";
 import ErrorScreen from "./js/components/ErrorScreen.js";
@@ -46,12 +46,19 @@ class App extends React.Component {
           {this.state.err && (
             <ErrorScreen err={this.state.err} setError={this.setError} />
           )}
-          {this.state.user && <NavBar user={this.state.user} />}
         </React.Fragment>
         <main style={{ marginTop: 60 }}>
           <BrowserRouter>
             <Routes>
-              <Route path="/">
+              <Route
+                path="/"
+                element={
+                  <React.Fragment>
+                    {this.state.user && <NavBar user={this.state.user} />}
+                    <Outlet />
+                  </React.Fragment>
+                }
+              >
                 <Route
                   index
                   element={
@@ -89,7 +96,7 @@ class App extends React.Component {
                     </React.Fragment>
                   }
                 />
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="*" element={<h1>There is nothing here!</h1>} />
               </Route>
             </Routes>
           </BrowserRouter>

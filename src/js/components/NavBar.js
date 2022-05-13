@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const navStyle = {
   backgroundColor: "silver",
@@ -44,22 +45,31 @@ const navUlLiA = {
   placeItems: "center",
 };
 
-// const navUlLi:hover{
-//     background-color: #F5BA42;
-//     border-right: 1px solid black;
-//     border-left: 1px solid black;
-// }
-// nav ul li:first-child:hover{
-//     border-left: 1px solid transparent;
-// }
-
 class NavBar extends React.Component {
   constructor(props) {
     super(props);
-  }
 
-  componentDidMount() {
-    // setTimeout(()=>{this.props.setError(null)}, 5000);
+    let navs = [
+      {
+        name: "Upload answer sheet",
+        url: "answer-sheet",
+        permissions: ["answer_sheet_upload"],
+        display: false,
+      },
+    ];
+
+    navs = navs.map((elem) => {
+      elem.permissions.forEach((perm)=>{
+        if (this.props.user.permissions.indexOf(perm) != -1) {
+          elem.display = true;
+        }
+      })
+      return elem;
+    });
+
+    this.state = {
+      navs,
+    };
   }
 
   render() {
@@ -69,14 +79,34 @@ class NavBar extends React.Component {
           <nav style={navStyle}>
             <ul style={navUlStyle}>
               {this.props.user &&
-                this.props.user.permissions.map((e) => {
+                this.state.navs &&
+                this.state.navs.map((e) => {
                   return (
-                    <li key={e} style={navUlLi}>
-                      <a style={navUlLiA}>{e}</a>
-                    </li>
+                    e.display && (
+                      <li key={e.url} style={navUlLi}>
+                        <Link style={navUlLiA} to={e.url}>
+                          {e.name}
+                        </Link>
+                      </li>
+                    )
                   );
                 })}
             </ul>
+            <a
+              style={{
+                height: "100%",
+                color: "black",
+                padding: "0px 10px",
+                fontFamily: "Courier New, Courier, monospace",
+                backgroundColor: "whitesmoke",
+                textDecoration: "none",
+                display: "grid",
+                placeItems: "center",
+              }}
+              href="/api/logout"
+            >
+              Logout
+            </a>
           </nav>
         )}
       </React.Fragment>
