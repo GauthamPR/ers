@@ -1,7 +1,11 @@
 const addExams = require("./addExams");
+const addReviewer = require("./addReviewer");
 const removeExam = require("./removeExam");
+const removeReviewer = require("./removeReviewer");
 
 module.exports = {
     addExams,
-    removeExam
+    addReviewer,
+    removeExam,
+    removeReviewer
 }

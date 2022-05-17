@@ -62,6 +62,12 @@ class NavBar extends React.Component {
         permissions: ["add_exams", "remove_exams"],
         display: false,
       },
+      {
+        name: "Manage Reviewers",
+        url: "manage-reviewers",
+        permissions: ["add_reviewers", "remove_reviewers"],
+        display: false,
+      },
     ];
 
     navs = navs.map((elem) => {
