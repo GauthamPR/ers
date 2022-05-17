@@ -71,9 +71,9 @@ class AnswerSheetUploader extends Component {
     // Request made to the backend api
     // Send formData object
     let res = await axios.put("api/answerSheet", formData);
-    this.setState({
-      buttonText: "Upload successful",
-    });
+      this.setState({
+        buttonText: "Upload successful",
+      });
   };
 
   // File content to be displayed after
@@ -118,7 +118,7 @@ class AnswerSheetUploader extends Component {
           this.props.user.permissions.indexOf("answer_sheet_upload") != -1 && (
             <div>
               <h1>Upload answer sheets</h1>
-              <div id="uploader">
+              <div className="form">
                 <label>
                   Answer Sheet
                   <input type="file" onChange={this.onFileChange} />

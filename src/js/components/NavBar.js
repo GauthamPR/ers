@@ -56,9 +56,16 @@ class NavBar extends React.Component {
         permissions: ["answer_sheet_upload"],
         display: false,
       },
+      {
+        name: "Manage Exams",
+        url: "manage-exams",
+        permissions: ["add_exams", "remove_exams"],
+        display: false,
+      },
     ];
 
     navs = navs.map((elem) => {
+      console.log(this.props.user)
       elem.permissions.forEach((perm)=>{
         if (this.props.user.permissions.indexOf(perm) != -1) {
           elem.display = true;

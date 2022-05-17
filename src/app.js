@@ -7,6 +7,7 @@ import Login from "./js/components/Login.js";
 import AnswerSheetUploader from "./js/components/AnswerSheetUploader.js";
 import NavBar from "./js/components/NavBar.js";
 import RequireAuth from "./js/components/RequireAuth.js";
+import ManageExams from "./js/components/ManageExams.js";
 
 class App extends React.Component {
   constructor(props) {
@@ -96,6 +97,12 @@ class App extends React.Component {
                     </React.Fragment>
                   }
                 />
+                <Route path="manage-exams" element={
+                  <React.Fragment>
+                    <RequireAuth account={this.state.account} user={this.state.user}/>
+                    <ManageExams />
+                  </React.Fragment>
+                } />
                 <Route path="*" element={<h1>There is nothing here!</h1>} />
               </Route>
             </Routes>
