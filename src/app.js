@@ -6,6 +6,7 @@ import {
   Navigate,
   Outlet,
 } from "react-router-dom";
+import { utils } from "ethers";
 
 import WalletConnector from "./js/components/WalletConnector.js";
 import ErrorScreen from "./js/components/ErrorScreen.js";
@@ -44,8 +45,9 @@ class App extends React.Component {
 
   // Action to be performed on event: wallet_connection
   setAccount(account) {
+    let properAccount = utils.getAddress(account);
     this.setState({
-      account,
+      account: properAccount,
     });
   }
 
@@ -124,7 +126,10 @@ class App extends React.Component {
                 <Route path="manage-reviewers" element={<ManageReviewers />} />
                 <Route path="evaluate">
                   <Route index element={<Evaluate />} />
-                  <Route path=":answerSheetId" element={<Evaluator />} />
+                  <Route
+                    path=":answerSheetId"
+                    element={<Evaluator user={this.state.user} />}
+                  />
                 </Route>
                 <Route path="*" element={<h1>There is nothing here!</h1>} />
               </Route>

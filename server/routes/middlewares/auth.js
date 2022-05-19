@@ -22,7 +22,7 @@ function verifySignature(address, signature, message) {
   const publicKey = ethUtil.ecrecover(msg, sig.v, sig.r, sig.s);
   const pubAddress = ethUtil.pubToAddress(publicKey);
   const recoveredAddress = ethUtil.addHexPrefix(pubAddress.toString("hex"));
-  if (recoveredAddress == address) return true;
+  if (recoveredAddress == address.toLowerCase()) return true;
   else return false;
 }
 

@@ -5,11 +5,11 @@ module.exports = async function (examId, info) {
     Exams.findOne({ _id: examId }, (err, exam) => {
       if (err) return reject(err);
       if (!exam) return reject({ message: "Exam not found" });
-      exam.reviewers.push(info.publicAddress.toLowerCase());
+      exam.reviewers.push(info.publicAddress);
       exam.save(async (err, doc) => {
         if (err) return reject(err);
         let assignment = new AssignedReviews({
-          reviewerPA: info.publicAddress.toLowerCase(),
+          reviewerPA: info.publicAddress,
           examId,
           count: 0,
         });

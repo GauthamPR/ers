@@ -6,11 +6,13 @@ class RequireAuth extends React.Component {
     super(props);
   }
 
-  render() {
+  componentWillUnmount() {
     if (this.props.location != "/" && !this.props.redirectURL) {
-      console.log(this.props.location);
       this.props.setRedirectURL(this.props.location);
     }
+  }
+
+  render() {
     return !this.props.account ? (
       <Navigate to="/public/connect" replace />
     ) : !this.props.user ? (

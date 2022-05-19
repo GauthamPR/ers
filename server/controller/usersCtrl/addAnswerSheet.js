@@ -32,7 +32,7 @@ module.exports = async function (contract, body, user) {
     hashValue: answerSheetHash,
   });
   await answerSheet.save();
-  await contract.ers.createCode(
+  await contract.ers.createAnswerSheet(
     body.examId,
     hashString(body.studentRollNo),
     answerSheetHash,
@@ -40,6 +40,4 @@ module.exports = async function (contract, body, user) {
     reviewerPA,
     { from: contract.account }
   );
-  let ret = await contract.ers.codes(answerSheetHash);
-  return ret;
 };

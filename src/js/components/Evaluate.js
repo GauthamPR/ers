@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
 
 const defaultState = {
   enableUploadBtn: false,
@@ -44,31 +45,35 @@ class Evaluate extends Component {
       <React.Fragment>
         <section>
           <h1>Yet to Review</h1>
-          <table>
-            <tbody>
-              <tr>
-                <th>Id</th>
-              </tr>
-              {this.state.reviews.pending.map((elem, key) => {
-                return (
-                  <tr key={key}>
-                    <td>{elem}</td>
-                    <td>
-                      <button
-                        onClick={async (e) => {
-                          e.target.disabled = "true";
-                          await this.handleEvaluate(elem);
-                          e.target.disabled = undefined;
-                        }}
-                      >
-                        Evaluate
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          {this.state.reviews.pending.length == 0 ? (
+            <Loader />
+          ) : (
+            <table>
+              <tbody>
+                <tr>
+                  <th>Id</th>
+                </tr>
+                {this.state.reviews.pending.map((elem, key) => {
+                  return (
+                    <tr key={key}>
+                      <td>{elem}</td>
+                      <td>
+                        <button
+                          onClick={async (e) => {
+                            e.target.disabled = "true";
+                            await this.handleEvaluate(elem);
+                            e.target.disabled = undefined;
+                          }}
+                        >
+                          Evaluate
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </section>
 
         <section>

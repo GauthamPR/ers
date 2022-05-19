@@ -1,11 +1,9 @@
+const addReview = require("./addReview");
+const findFile = require("./findFile");
 const getReviews = require("./getReviews");
-const addReviewer = require("./addReviewer");
-const removeExam = require("./removeExam");
-const removeReviewer = require("./removeReviewer");
 
 module.exports = {
-    getReviews,
-    addReviewer,
-    removeExam,
-    removeReviewer
-}
+  addReview,
+  findFile,
+  getReviews,
+};
