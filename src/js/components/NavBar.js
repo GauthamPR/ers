@@ -68,10 +68,15 @@ class NavBar extends React.Component {
         permissions: ["add_reviewers", "remove_reviewers"],
         display: false,
       },
+      {
+        name: "Evaluate",
+        url: "evaluate",
+        permissions: ["evaluate"],
+        display: false,
+      },
     ];
 
     navs = navs.map((elem) => {
-      console.log(this.props.user)
       elem.permissions.forEach((perm)=>{
         if (this.props.user.permissions.indexOf(perm) != -1) {
           elem.display = true;

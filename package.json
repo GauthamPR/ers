@@ -2,7 +2,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
-    "build": "webpack"
+    "build": "webpack",
+    "prettier": "prettier --write 'contracts/**/*.sol'"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.8",
@@ -24,6 +25,7 @@
     "multer": "^1.4.4",
     "passport": "^0.5.2",
     "passport-local": "^1.0.0",
+    "pdf-viewer-reactjs": "^2.2.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-lazyload": "^3.2.0",

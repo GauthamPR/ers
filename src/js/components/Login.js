@@ -75,7 +75,7 @@ class Main extends React.Component {
   }
 
   componentDidUpdate(){
-      if (this.state.loggedIn) this.props.navigate("/answer-sheet");
+      if (this.state.loggedIn) this.props.navigate(this.props.redirectURL || "/dashboard");
   }
 
   render() {
