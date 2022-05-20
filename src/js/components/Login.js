@@ -81,7 +81,7 @@ class Main extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <main style={{ margin: 20, marginTop: 60 }}>
+        <main style={{ margin: 20, marginTop: 80 }}>
           <div>
             {!this.state.loggedIn && (
               <button

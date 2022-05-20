@@ -3,6 +3,9 @@ pragma solidity ^0.8.13;
 
 contract ERS {
     string[] answer_sheet_ids;
+    mapping(string => AnswerSheet) public answer_sheets;
+
+    mapping(address => string[]) public reviews;
 
     struct AnswerSheet {
         string exam_id;
@@ -13,13 +16,16 @@ contract ERS {
         string[] review_ids;
         mapping(string => uint256[]) marks;
     }
-    mapping(string => AnswerSheet) public answer_sheets;
 
     function viewAnswerSheets() public view returns (string[] memory) {
         return answer_sheet_ids;
     }
 
-    function viewAnswerSheetReviewer(string memory answer_sheet_hash) public view returns (address) {
+    function viewAnswerSheetReviewer(string memory answer_sheet_hash)
+        public
+        view
+        returns (address)
+    {
         return answer_sheets[answer_sheet_hash].public_addr_reviewer;
     }
 
@@ -58,6 +64,14 @@ contract ERS {
         return yetToReview;
     }
 
+    function getReviewed(address public_addr_reviewer)
+        public
+        view
+        returns (string[] memory)
+    {
+        return reviews[public_addr_reviewer];
+    }
+
     function addMarks(
         string memory uniqueId,
         string memory answer_sheet_hash,
@@ -69,6 +83,7 @@ contract ERS {
                 public_addr_reviewer,
             "Review not allowed for this user"
         );
+        reviews[public_addr_reviewer].push(answer_sheet_hash);
         answer_sheets[answer_sheet_hash].review_ids.push(uniqueId);
         answer_sheets[answer_sheet_hash].marks[uniqueId] = marks;
         answer_sheets[answer_sheet_hash].public_addr_reviewer = address(0);
@@ -79,7 +94,8 @@ contract ERS {
         view
         returns (uint256[] memory)
     {
-        uint256 lastIdx = answer_sheets[answer_sheet_hash].review_ids.length - 1;
+        uint256 lastIdx = answer_sheets[answer_sheet_hash].review_ids.length -
+            1;
         return
             answer_sheets[answer_sheet_hash].marks[
                 answer_sheets[answer_sheet_hash].review_ids[lastIdx]

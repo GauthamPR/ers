@@ -1,9 +1,11 @@
 const addReview = require("./addReview");
 const findFile = require("./findFile");
-const getReviews = require("./getReviews");
+const getPendingReviews = require("./getPendingReviews");
+const getReviewed = require("./getReviewed");
 
 module.exports = {
   addReview,
   findFile,
-  getReviews,
+  getPendingReviews,
+  getReviewed,
 };

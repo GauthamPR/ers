@@ -6,8 +6,8 @@ module.exports = function (app, contract) {
   app.route("/api/reviews").get(ensure.authenticated, async (req, res) => {
     try {
       let reviews = {};
-      reviews.pending = await EvaluatorCtrl.getReviews(req.user, contract);
-      reviews.reviewed = [];
+      reviews.pending = await EvaluatorCtrl.getPendingReviews(req.user, contract);
+      reviews.reviewed = await EvaluatorCtrl.getReviewed(req.user, contract);
       res.status(200).json(reviews);
     } catch (err) {
       respondError(err, res);

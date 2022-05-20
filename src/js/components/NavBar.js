@@ -2,17 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const navStyle = {
-  backgroundColor: "silver",
+  backgroundColor: "rgb(38, 43, 50)",
   width: "100%",
   zIndex: "1000",
   boxSizing: "border-box",
   position: "fixed",
-  height: "40px",
+  height: "50px",
   top: 0,
   left: 0,
   display: "flex",
   justifyContent: "space-between",
   alignItems: "stretch",
+  borderBottom: "1px solid black",
+  boxShadow: "0px 1px 8px #0006",
 };
 
 const navUlStyle = {
@@ -22,8 +24,6 @@ const navUlStyle = {
   listStyle: "none",
   padding: "0",
   margin: "0",
-  borderBottom: "1px solid black",
-  borderLeft: "1px solid black",
 };
 
 const navUlLi = {
@@ -31,14 +31,12 @@ const navUlLi = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  padding: "0px 10px",
-  backgroundColor: "whitesmoke",
-  border: "1px solid transparent",
+  padding: "0px 22px",
+  cursor: "pointer",
 };
 const navUlLiA = {
-  color: "black",
   textDecoration: "none",
-  fontFamily: "Courier New, Courier, monospace",
+  letterSpacing: "1px",
   height: "100%",
   width: "100%",
   display: "grid",
@@ -51,7 +49,7 @@ class NavBar extends React.Component {
 
     let navs = [
       {
-        name: "Upload answer sheet",
+        name: "Upload Answer Sheet",
         url: "answer-sheet",
         permissions: ["answer_sheet_upload"],
         display: false,
@@ -77,11 +75,11 @@ class NavBar extends React.Component {
     ];
 
     navs = navs.map((elem) => {
-      elem.permissions.forEach((perm)=>{
+      elem.permissions.forEach((perm) => {
         if (this.props.user.permissions.indexOf(perm) != -1) {
           elem.display = true;
         }
-      })
+      });
       return elem;
     });
 
@@ -101,7 +99,7 @@ class NavBar extends React.Component {
                 this.state.navs.map((e) => {
                   return (
                     e.display && (
-                      <li key={e.url} style={navUlLi}>
+                      <li className="hover-anim" key={e.url} style={navUlLi}>
                         <Link style={navUlLiA} to={e.url}>
                           {e.name}
                         </Link>
@@ -111,15 +109,15 @@ class NavBar extends React.Component {
                 })}
             </ul>
             <a
+              className="hover-red"
               style={{
                 height: "100%",
-                color: "black",
-                padding: "0px 10px",
-                fontFamily: "Courier New, Courier, monospace",
-                backgroundColor: "whitesmoke",
+                padding: "0px 22px",
+                backgroundColor: "black",
                 textDecoration: "none",
                 display: "grid",
                 placeItems: "center",
+                letterSpacing: "1px",
               }}
               href="/api/logout"
             >

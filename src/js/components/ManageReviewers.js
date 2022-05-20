@@ -76,99 +76,108 @@ class ManageReviewers extends Component {
       <React.Fragment>
         <section>
           <h1>Reviewers</h1>
-          <table>
-            <tbody>
-              <tr>
-                <th>Reviewer PA</th>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Month</th>
-                <th>Year</th>
-                <th>Action</th>
-              </tr>
-              {this.state.exams.map((exam, key) => {
-                return exam.reviewers.map((reviewer, key) => {
-                  return (
-                    <tr key={key}>
-                      <td>{reviewer}</td>
-                      <td>{exam._id}</td>
-                      <td>{exam.name}</td>
-                      <td>{exam.type}</td>
-                      <td>{exam.month}</td>
-                      <td>{exam.year}</td>
-                      <td>
-                        <button
-                          onClick={async (e) => {
-                            e.target.disabled = "true";
-                            await this.handleDelete(exam._id, reviewer);
-                            e.target.disabled = undefined;
-                          }}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                });
-              })}
-            </tbody>
-          </table>
+          <div className="content">
+            <table>
+              <tbody>
+                <tr>
+                  <th>Reviewer PA</th>
+                  <th>Id</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Month</th>
+                  <th>Year</th>
+                  <th>Action</th>
+                </tr>
+                {this.state.exams.map((exam, key) => {
+                  return exam.reviewers.map((reviewer, key) => {
+                    return (
+                      <tr key={key}>
+                        <td>{reviewer}</td>
+                        <td>{exam._id}</td>
+                        <td>{exam.name}</td>
+                        <td>{exam.type}</td>
+                        <td>{exam.month}</td>
+                        <td>{exam.year}</td>
+                        <td>
+                          <button
+                            className="red mini-btn"
+                            onClick={async (e) => {
+                              e.target.disabled = "true";
+                              await this.handleDelete(exam._id, reviewer);
+                              e.target.disabled = undefined;
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  });
+                })}
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <h1>Add Reviewers</h1>
-        <form className="form" onSubmit={this.preventDefault}>
-          <label>
-            Enter Reviewer Public Address
-            <input
-              type="text"
-              name="publicAddress"
-              value={this.state.publicAddress || ""}
-              onChange={this.handleChange}
-            />
-          </label>
-          <label>
-            Choose exam
-            <select name="examId" onChange={this.handleChange}>
-              <option value="">None</option>
-              {this.state.exams.map((exam) => (
-                <option key={exam._id} value={exam._id}>
-                  {exam.name +
-                    "-" +
-                    exam.month +
-                    " " +
-                    exam.year +
-                    "(" +
-                    exam.type +
-                    ")"}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <button
-              className="blue-btn"
-              disabled={
-                !(
-                  this.state.enableUploadBtn &&
-                  this.state.explicitEnableUploadBtn
-                )
-              }
-              onClick={this.submitInfo}
-              type="submit"
-            >
-              {this.state.buttonText}
-            </button>
-            <button
-              className="blue-btn"
-              onClick={() => {
-                this.setState(defaultState);
-              }}
-            >
-              Reset
-            </button>
-          </label>
-        </form>
+        <div className="content">
+          <form style={{ width: "100%" }} onSubmit={this.preventDefault}>
+            <div className="form">
+              <label>
+                Enter Reviewer Public Address
+                <input
+                  type="text"
+                  name="publicAddress"
+                  value={this.state.publicAddress || ""}
+                  onChange={this.handleChange}
+                />
+              </label>
+              <label>
+                Choose exam
+                <select name="examId" onChange={this.handleChange}>
+                  <option value="">None</option>
+                  {this.state.exams.map((exam) => (
+                    <option key={exam._id} value={exam._id}>
+                      {exam.name +
+                        "-" +
+                        exam.month +
+                        " " +
+                        exam.year +
+                        "(" +
+                        exam.type +
+                        ")"}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div className="btn-holder">
+              <label>
+                <button
+                  className="blue-btn"
+                  disabled={
+                    !(
+                      this.state.enableUploadBtn &&
+                      this.state.explicitEnableUploadBtn
+                    )
+                  }
+                  onClick={this.submitInfo}
+                  type="submit"
+                >
+                  {this.state.buttonText}
+                </button>
+                <button
+                  className="orange-btn"
+                  onClick={() => {
+                    this.setState(defaultState);
+                  }}
+                >
+                  Reset
+                </button>
+              </label>
+            </div>
+          </form>
+        </div>
       </React.Fragment>
     );
   }

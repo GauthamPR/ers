@@ -73,7 +73,7 @@ class App extends React.Component {
             <ErrorScreen err={this.state.err} setError={this.setError} />
           )}
         </React.Fragment>
-        <main style={{ marginTop: 60 }}>
+        <main style={{ marginTop: 80 }}>
           <BrowserRouter>
             <Routes>
               <Route path="public">

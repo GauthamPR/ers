@@ -45,49 +45,73 @@ class Evaluate extends Component {
       <React.Fragment>
         <section>
           <h1>Yet to Review</h1>
-          {!this.state.reviews.pending ? (
-            <Loader />
-          ) : (
-            <table>
-              <tbody>
-                <tr>
-                  <th>Id</th>
-                </tr>
-                {this.state.reviews.pending && this.state.reviews.pending.map((elem, key) => {
-                  return (
-                    <tr key={key}>
-                      <td>{elem}</td>
-                      <td>
-                        <button
-                          onClick={async (e) => {
-                            e.target.disabled = "true";
-                            await this.handleEvaluate(elem);
-                            e.target.disabled = undefined;
-                          }}
-                        >
-                          Evaluate
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
+          <div className="content">
+            {!this.state.reviews.pending ? (
+              <Loader />
+            ) : (
+              <React.Fragment>
+                {this.state.reviews.pending.length == 0 ? (
+                  <div className="translucent">Nothing here</div>
+                ) : (
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>Id</th>
+                      </tr>
+                      {this.state.reviews.pending.map((elem, key) => {
+                        return (
+                          <tr key={key}>
+                            <td>{elem}</td>
+                            <td>
+                              <button
+                                onClick={async (e) => {
+                                  e.target.disabled = "true";
+                                  await this.handleEvaluate(elem);
+                                  e.target.disabled = undefined;
+                                }}
+                              >
+                                Evaluate
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
+              </React.Fragment>
+            )}
+          </div>
         </section>
 
         <section>
           <h1>Reviewed</h1>
-          <table>
-            <tbody>
-              <tr>
-                <th>Id</th>
-              </tr>
-              {this.state.reviews.reviewed && this.state.reviews.reviewed.map((elem, key) => {
-                return (
-                  <tr key={key}>
-                    <td>{elem}</td>
-                    <td>
+          <div className="content">
+            {!this.state.reviews.reviewed ? (
+              <Loader />
+            ) : (
+              <React.Fragment>
+                {this.state.reviews.reviewed.length == 0 ? (
+                  <div className="translucent">Nothing here</div>
+                ) : (
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>Id</th>
+                        <th>Marks</th>
+                      </tr>
+                      {this.state.reviews.reviewed &&
+                        this.state.reviews.reviewed.map((elem, key) => {
+                          return (
+                            <tr key={key}>
+                              <td>{elem.id}</td>
+                              <td>
+                                {elem.marks.reduce((total, mark) => {
+                                  total += mark;
+                                  return total;
+                                }, 0)}
+                              </td>
+                              {/* <td>
                       <button
                         onClick={async (e) => {
                           e.target.disabled = "true";
@@ -97,12 +121,16 @@ class Evaluate extends Component {
                       >
                         Delete
                       </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    </td> */}
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                )}
+              </React.Fragment>
+            )}
+          </div>
         </section>
       </React.Fragment>
     );
