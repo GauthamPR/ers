@@ -7,9 +7,9 @@ class Loader extends Component {
 
   render() {
     return (
-      <div class="showbox">
-        <div class="loader">
-          <svg class="circular" viewBox="25 25 50 50">
+      <div className="showbox">
+        <div className="loader">
+          <svg className="circular" viewBox="25 25 50 50">
             <circle
               class="path"
               cx="50"

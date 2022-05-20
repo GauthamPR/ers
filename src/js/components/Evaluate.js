@@ -19,7 +19,7 @@ class Evaluate extends Component {
     super(props);
 
     this.state = Object.assign({}, defaultState, {
-      reviews: { pending: [], reviewed: [] },
+      reviews: { pending: null, reviewed: null },
     });
 
     this.handleEvaluate = this.handleEvaluate.bind(this);
@@ -45,7 +45,7 @@ class Evaluate extends Component {
       <React.Fragment>
         <section>
           <h1>Yet to Review</h1>
-          {this.state.reviews.pending.length == 0 ? (
+          {!this.state.reviews.pending ? (
             <Loader />
           ) : (
             <table>
@@ -53,7 +53,7 @@ class Evaluate extends Component {
                 <tr>
                   <th>Id</th>
                 </tr>
-                {this.state.reviews.pending.map((elem, key) => {
+                {this.state.reviews.pending && this.state.reviews.pending.map((elem, key) => {
                   return (
                     <tr key={key}>
                       <td>{elem}</td>
@@ -83,7 +83,7 @@ class Evaluate extends Component {
               <tr>
                 <th>Id</th>
               </tr>
-              {this.state.reviews.reviewed.map((elem, key) => {
+              {this.state.reviews.reviewed && this.state.reviews.reviewed.map((elem, key) => {
                 return (
                   <tr key={key}>
                     <td>{elem}</td>
