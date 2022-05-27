@@ -18,6 +18,8 @@ import ManageExams from "./js/components/ManageExams.js";
 import ManageReviewers from "./js/components/ManageReviewers.js";
 import Evaluate from "./js/components/Evaluate.js";
 import Evaluator from "./js/components/Evaluator.js";
+import Results from "./js/components/Results.js";
+import IndivResult from "./js/components/IndivResult.js";
 
 class App extends React.Component {
   constructor(props) {
@@ -103,6 +105,24 @@ class App extends React.Component {
                     />
                   }
                 />
+                <Route path="results">
+                  <Route
+                    index
+                    element={
+                      <Results
+                        user={this.state.user}
+                        account={this.state.account}
+                        redirectURL={this.state.redirectURL}
+                        setUser={this.setUser}
+                        setError={this.setError}
+                      />
+                    }
+                  />
+                  <Route
+                    path=":answerSheetId"
+                    element={<IndivResult user={this.state.user} />}
+                  />
+                </Route>
               </Route>
               <Route
                 path="/"

@@ -1,8 +1,9 @@
 const passport = require("passport");
 const { respondError } = require("./routesUtils");
 const { getNonce } = require("../controller/genericCtrl");
+const genericCtrl = require("../controller/genericCtrl");
 
-module.exports = function (app) {
+module.exports = function (app, contract) {
   app.route("/api/login").post(
     passport.authenticate("local", {
       failureRedirect: "/failure",
@@ -20,6 +21,41 @@ module.exports = function (app) {
       }
     }
   );
+
+  app.route("/api/answer-sheets/:rollNo").get(async (req, res) => {
+    try {
+      let answerSheets = await genericCtrl.getAnswerSheets(
+        req.params.rollNo,
+        contract
+      );
+      return res.status(200).json({ answerSheets });
+    } catch (err) {
+      respondError(err, res);
+    }
+  });
+
+  app.route("/api/files/:answerSheetId").get(async (req, res) => {
+    try {
+      let fileName = await genericCtrl.findFile(
+        req.user,
+        { answerSheetId: req.params.answerSheetId },
+        contract
+      );
+      res.sendFile(process.cwd() + "/files/answer-sheets/" + fileName);
+    } catch (err) {
+      respondError(err, res);
+    }
+  });
+
+  app.route("/api/results/:answerSheetId").get(async (req, res) => {
+    try {
+      let result = await genericCtrl.findResult(req.params.answerSheetId, contract);
+      res.json({result});
+    } catch (err) {
+      respondError(err, res);
+    }
+  });
+
   app.route("/api/login/:publicAddress").get(async (req, res) => {
     try {
       let nonce = await getNonce(req.params.publicAddress);

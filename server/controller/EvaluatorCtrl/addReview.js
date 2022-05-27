@@ -1,5 +1,5 @@
 const { Exams, AssignedReviews } = require("../../database");
-const hashString = require("../../utils/hashString");
+const hashString = require("../../utils/encAndHashStr");
 const logger = require("../../utils/log");
 
 module.exports = async function (user, info, contract) {

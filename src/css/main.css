@@ -56,6 +56,10 @@ body {
 .red {
   background-color: #be3d39;
 }
+.green{
+  background-color: #57a957;
+  border-color: #57a957;
+}
 .mini-btn {
   margin: 0.2em 0.1em;
   font-family: "Open Sans", sans-serif;

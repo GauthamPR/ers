@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.9;
 
 contract ERS {
     string[] answer_sheet_ids;
@@ -94,12 +94,53 @@ contract ERS {
         view
         returns (uint256[] memory)
     {
-        uint256 lastIdx = answer_sheets[answer_sheet_hash].review_ids.length -
-            1;
-        return
-            answer_sheets[answer_sheet_hash].marks[
-                answer_sheets[answer_sheet_hash].review_ids[lastIdx]
-            ];
+        uint256[] memory emp;
+        if (answer_sheets[answer_sheet_hash].review_ids.length > 0) {
+            uint256 lastIdx = answer_sheets[answer_sheet_hash]
+                .review_ids
+                .length - 1;
+            return
+                answer_sheets[answer_sheet_hash].marks[
+                    answer_sheets[answer_sheet_hash].review_ids[lastIdx]
+                ];
+        }
+        return emp;
+    }
+
+    function stringsEquals(string memory s1, string memory s2)
+        private
+        pure
+        returns (bool)
+    {
+        bytes memory b1 = bytes(s1);
+        bytes memory b2 = bytes(s2);
+        uint256 l1 = b1.length;
+        if (l1 != b2.length) return false;
+        for (uint256 i = 0; i < l1; i++) {
+            if (b1[i] != b2[i]) return false;
+        }
+        return true;
+    }
+
+    function findAnswerSheets(string memory student_id_hash)
+        public
+        view
+        returns (string[] memory)
+    {
+        uint256 arrayLength = answer_sheet_ids.length;
+        uint256 idx = 0;
+        string[] memory studentAnswerSheets = new string[](arrayLength);
+        for (uint256 i = 0; i < arrayLength; i++) {
+            if (
+                stringsEquals(
+                    answer_sheets[answer_sheet_ids[i]].student_id_hash,
+                    student_id_hash
+                )
+            ) {
+                studentAnswerSheets[idx++] = answer_sheet_ids[i];
+            }
+        }
+        return studentAnswerSheets;
     }
 
     function viewReviews(string memory answer_sheet_hash)

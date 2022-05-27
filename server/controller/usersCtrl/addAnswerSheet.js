@@ -1,6 +1,6 @@
 const logger = require("../../utils/log");
 const hashFile = require("../../utils/hashFile");
-const hashString = require("../../utils/hashString");
+const encAndHashStr = require("../../utils/encAndHashStr");
 const { AnswerSheets, AssignedReviews } = require("../../database");
 
 async function findReviewer(body, user) {
@@ -34,7 +34,7 @@ module.exports = async function (contract, body, user) {
   await answerSheet.save();
   await contract.ers.createAnswerSheet(
     body.examId,
-    hashString(body.studentRollNo),
+    encAndHashStr(body.studentRollNo),
     answerSheetHash,
     user.publicAddress,
     reviewerPA,

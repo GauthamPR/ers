@@ -57,6 +57,7 @@ class Evaluate extends Component {
                     <tbody>
                       <tr>
                         <th>Id</th>
+                        <th>Action</th>
                       </tr>
                       {this.state.reviews.pending.map((elem, key) => {
                         return (
@@ -64,6 +65,7 @@ class Evaluate extends Component {
                             <td>{elem}</td>
                             <td>
                               <button
+                              className="green mini-btn"
                                 onClick={async (e) => {
                                   e.target.disabled = "true";
                                   await this.handleEvaluate(elem);
