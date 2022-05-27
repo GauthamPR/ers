@@ -52,6 +52,14 @@ class IndivResult extends Component {
         enableUploadBtn: false,
         buttonText: "Already Revaluated",
       });
+    } else if (
+      !this.state.result.marks ||
+      this.state.result.marks.length == 0
+    ) {
+      this.setState({
+        enableUploadBtn: false,
+        buttonText: "Results Pending",
+      });
     }
   }
 
@@ -66,13 +74,23 @@ class IndivResult extends Component {
     return (
       <React.Fragment>
         <section>
-          <button
-            className="blue-btn"
-            disabled={!this.state.enableUploadBtn}
-            onClick={this.handleClick}
-          >
-            {this.state.buttonText}
-          </button>
+          {this.state.result && (
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              <button
+                className="green-btn"
+                disabled={!this.state.enableUploadBtn}
+                onClick={this.handleClick}
+              >
+                {this.state.buttonText}
+              </button>
+            </div>
+          )}
           <h1>Result</h1>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div
