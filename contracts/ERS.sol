@@ -2,10 +2,21 @@
 pragma solidity ^0.8.9;
 
 contract ERS {
+    address private owner;
+
     string[] answer_sheet_ids;
-    mapping(string => AnswerSheet) public answer_sheets;
+    mapping(string => AnswerSheet) private answer_sheets;
 
     mapping(address => string[]) public reviews;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier _ownerOnly() {
+        require(msg.sender == owner);
+        _;
+    }
 
     struct AnswerSheet {
         string exam_id;
@@ -35,7 +46,7 @@ contract ERS {
         string memory answer_sheet_hash,
         address public_addr_uploader,
         address public_addr_reviewer
-    ) public {
+    ) public _ownerOnly {
         answer_sheet_ids.push(answer_sheet_hash);
         AnswerSheet storage r = answer_sheets[answer_sheet_hash];
         r.exam_id = exam_id;
@@ -77,7 +88,7 @@ contract ERS {
         string memory answer_sheet_hash,
         address public_addr_reviewer,
         uint256[] memory marks
-    ) public {
+    ) public _ownerOnly {
         require(
             answer_sheets[answer_sheet_hash].public_addr_reviewer ==
                 public_addr_reviewer,

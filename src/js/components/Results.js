@@ -68,6 +68,7 @@ class Results extends Component {
       <React.Fragment>
         <section>
           <div
+            className="form"
             style={{
               display: "flex",
               flexDirection: "column",
@@ -156,7 +157,9 @@ class Results extends Component {
                     })
                   ) : (
                     <tr>
-                      <td colspan="3" width="99%" style={{color: "silver"}}>None</td>
+                      <td colspan="3" width="99%" style={{ color: "silver" }}>
+                        None
+                      </td>
                     </tr>
                   )}
                 </tbody>

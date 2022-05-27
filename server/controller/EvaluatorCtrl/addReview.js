@@ -4,7 +4,7 @@ const logger = require("../../utils/log");
 
 module.exports = async function (user, info, contract) {
   await contract.ers.addMarks(
-    hashString(String(Date.now())),
+    info.answerSheetId + user.publicAddress,
     info.answerSheetId,
     user.publicAddress,
     info.marks,
