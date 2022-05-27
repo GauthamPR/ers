@@ -24,12 +24,21 @@ contract ERS {
         string answer_sheet_hash;
         address public_addr_uploader;
         address public_addr_reviewer;
+        bool reval;
         string[] review_ids;
         mapping(string => uint256[]) marks;
     }
 
     function viewAnswerSheets() public view returns (string[] memory) {
         return answer_sheet_ids;
+    }
+
+    function viewAnswerSheetSubjectId(string memory answer_sheet_hash)
+        public
+        view
+        returns (string memory)
+    {
+        return answer_sheets[answer_sheet_hash].exam_id;
     }
 
     function viewAnswerSheetReviewer(string memory answer_sheet_hash)
@@ -51,6 +60,7 @@ contract ERS {
         AnswerSheet storage r = answer_sheets[answer_sheet_hash];
         r.exam_id = exam_id;
         r.student_id_hash = student_id_hash;
+        r.reval = false;
         r.answer_sheet_hash = answer_sheet_hash;
         r.public_addr_uploader = public_addr_uploader;
         r.public_addr_reviewer = public_addr_reviewer;
@@ -98,6 +108,16 @@ contract ERS {
         answer_sheets[answer_sheet_hash].review_ids.push(uniqueId);
         answer_sheets[answer_sheet_hash].marks[uniqueId] = marks;
         answer_sheets[answer_sheet_hash].public_addr_reviewer = address(0);
+    }
+
+    function assignReval(
+        string memory answer_sheet_hash,
+        address public_addr_reviewer
+    ) public _ownerOnly {
+        require(answer_sheets[answer_sheet_hash].reval == false, "MAX_REVAL");
+        answer_sheets[answer_sheet_hash]
+            .public_addr_reviewer = public_addr_reviewer;
+        answer_sheets[answer_sheet_hash].reval = true;
     }
 
     function viewFinalMarks(string memory answer_sheet_hash)
@@ -160,5 +180,33 @@ contract ERS {
         returns (string[] memory)
     {
         return answer_sheets[answer_sheet_hash].review_ids;
+    }
+
+    function viewAnswerSheetState(string memory answer_sheet_hash)
+        public
+        view
+        returns (string memory)
+    {
+        if (
+            answer_sheets[answer_sheet_hash].review_ids.length > 1 &&
+            answer_sheets[answer_sheet_hash].reval == true
+        ) {
+            return string("MAX_REVAL");
+        } else if (
+            answer_sheets[answer_sheet_hash].review_ids.length >= 1 &&
+            answer_sheets[answer_sheet_hash].reval == true
+        ) {
+            return string("REVAL_ONGOING");
+        } else {
+            return string("BASIC");
+        }
+    }
+
+    function viewReval(string memory answer_sheet_hash)
+        public
+        view
+        returns (bool)
+    {
+        return answer_sheets[answer_sheet_hash].reval;
     }
 }

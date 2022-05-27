@@ -11,16 +11,48 @@ class IndivResult extends Component {
     this.state = {
       enableUploadBtn: true,
       explicitEnableUploadBtn: true,
-      buttonText: "Upload Marks",
+      buttonText: "Apply for Revaluation",
       noOfPages: 0,
     };
 
+    this.handleClick = this.handleClick.bind(this);
     this.setPages = this.setPages.bind(this);
+  }
+
+  async handleClick() {
+    this.setState({ enableUploadBtn: false, buttonText: "Applying..." });
+
+    try {
+      await axios({
+        method: "put",
+        url: "/api/answer-sheets/" + this.props.answerSheetId + "/revaluate",
+        data: { password: "studentPass" },
+      });
+      this.setState({ buttonText: "Applied for Revaluation" });
+    } catch (err) {
+      let errMsg = err.response.data.error;
+      if (errMsg == "MAX_REVAL")
+        this.setState({ buttonText: "Already Re-evaluated" });
+      else if (errMsg == "REVAL_ONGOING")
+        this.setState({ buttonText: "Ongoing Revaluation" });
+      else this.setState({ buttonText: err.msg || "Unavailable" });
+    }
   }
 
   async updateResults() {
     let res = await axios.get("/api/results/" + this.props.answerSheetId);
     this.setState({ result: res.data.result });
+    if (this.state.result.state == "REVAL_ONGOING") {
+      this.setState({
+        enableUploadBtn: false,
+        buttonText: "Revaluation Pending",
+      });
+    } else if (this.state.result.state == "MAX_REVAL") {
+      this.setState({
+        enableUploadBtn: false,
+        buttonText: "Already Revaluated",
+      });
+    }
   }
 
   async componentDidMount() {
@@ -34,6 +66,13 @@ class IndivResult extends Component {
     return (
       <React.Fragment>
         <section>
+          <button
+            className="blue-btn"
+            disabled={!this.state.enableUploadBtn}
+            onClick={this.handleClick}
+          >
+            {this.state.buttonText}
+          </button>
           <h1>Result</h1>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div

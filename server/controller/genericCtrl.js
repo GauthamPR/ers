@@ -1,4 +1,4 @@
-const { Users, AnswerSheets } = require("../database");
+const { Users, AnswerSheets, AssignedReviews } = require("../database");
 const encAndHashStr = require("../utils/encAndHashStr");
 
 module.exports = {
@@ -43,10 +43,58 @@ module.exports = {
     return answerSheet.name;
   },
 
-  findResult: async function(answerSheetId, contract){
-    let ret = {id: answerSheetId};
+  findResult: async function (answerSheetId, contract) {
+    let ret = { id: answerSheetId };
     ret.marks = await contract.ers.viewFinalMarks(answerSheetId);
-    ret.marks = ret.marks.map(elem=>elem.toNumber());
+    ret.state = await contract.ers.viewAnswerSheetState(answerSheetId);
+    ret.marks = ret.marks.map((elem) => elem.toNumber());
     return ret;
-  }
+  },
+
+  revaluateAnswerSheet: async function (answerSheetId, info, contract) {
+
+    if (info.password != "studentPass") {
+      throw new Error("Wrong password");
+    }
+
+    let examId = await contract.ers.viewAnswerSheetSubjectId(answerSheetId);
+    let ansSheetState = await contract.ers.viewAnswerSheetState(answerSheetId);
+
+    if(ansSheetState != "BASIC"){
+      throw new Error(ansSheetState);
+    }
+
+    let nextReviewer;
+
+    let assignments = await AssignedReviews.find({ examId: examId });
+    await Promise.all(
+
+      // For each Reviewer
+      assignments.map(async (assignment, idx) => {
+        let previouslyReviewed = false;
+        let reviewed = await contract.ers.getReviewed(assignment.reviewerPA);
+
+        // Check if previously Reviewed
+        reviewed.forEach((reviewedAnswerSheetId) => {
+          if (reviewedAnswerSheetId == answerSheetId) {
+            previouslyReviewed = true
+          }
+        });
+
+        if (!previouslyReviewed) {
+          nextReviewer = assignment;
+        }
+      })
+    );
+
+    if (!nextReviewer) {
+      throw new Error("NO_REV_FOUND");
+    }
+
+    nextReviewer.count++;
+    await nextReviewer.save();
+    await contract.ers.assignReval(answerSheetId, nextReviewer.reviewerPA, {
+      from: contract.account,
+    });
+  },
 };

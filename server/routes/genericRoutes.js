@@ -34,6 +34,19 @@ module.exports = function (app, contract) {
     }
   });
 
+  app.route("/api/answer-sheets/:answerSheetId/revaluate").put(async (req, res) => {
+    try {
+      let answerSheets = await genericCtrl.revaluateAnswerSheet(
+        req.params.answerSheetId,
+        req.body,
+        contract
+      );
+      return res.status(200).json({ answerSheets });
+    } catch (err) {
+      respondError(err, res);
+    }
+  });
+
   app.route("/api/files/:answerSheetId").get(async (req, res) => {
     try {
       let fileName = await genericCtrl.findFile(

@@ -54,7 +54,6 @@ class Results extends Component {
       url: "/api/answer-sheets/" + this.state.rollNo,
     });
 
-    console.log(res.data);
     this.setState({
       buttonText: "Search",
       enableUploadBtn: true,
