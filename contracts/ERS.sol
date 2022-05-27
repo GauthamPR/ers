@@ -201,12 +201,4 @@ contract ERS {
             return string("BASIC");
         }
     }
-
-    function viewReval(string memory answer_sheet_hash)
-        public
-        view
-        returns (bool)
-    {
-        return answer_sheets[answer_sheet_hash].reval;
-    }
 }
