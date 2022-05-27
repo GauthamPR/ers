@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  Outlet,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
 import { utils } from "ethers";
 
 import WalletConnector from "./js/components/WalletConnector.js";
@@ -80,6 +74,45 @@ class App extends React.Component {
             <Routes>
               <Route path="public">
                 <Route
+                  index
+                  element={
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        width: "100%",
+                        justifyContent: "space-around",
+                        height: "70vh",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div>
+                        <img height="200px" src="/images/logo.jpg" />
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-around",
+                          width: "100%",
+                        }}
+                      >
+                        <Link
+                          to={
+                            this.state.user ? "/dashboard" : "/public/connect"
+                          }
+                        >
+                          <button className="blue-btn">
+                            {this.state.user ? "Dashboard" : "Login"}
+                          </button>
+                        </Link>
+                        <Link to="/public/results">
+                          <button className="blue-btn">Check Results</button>
+                        </Link>
+                      </div>
+                    </div>
+                  }
+                />
+                <Route
                   path="connect"
                   element={
                     <React.Fragment>
@@ -128,7 +161,7 @@ class App extends React.Component {
                 path="/"
                 element={
                   <React.Fragment>
-                    {this.state.user && <NavBar user={this.state.user} />}
+                    <NavBar user={this.state.user} />
                     <RequireAuth
                       account={this.state.account}
                       user={this.state.user}
@@ -138,6 +171,28 @@ class App extends React.Component {
                   </React.Fragment>
                 }
               >
+                <Route
+                  path="dashboard"
+                  element={
+                    <div
+                      style={{
+                        display: "grid",
+                        width: "100%",
+                        height: "75vh",
+                        placeItems: "center",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 64,
+                          fontFamily: "Montserrat, monospace",
+                        }}
+                      >
+                        Welcome, {this.state.user && this.state.user.name}
+                      </span>
+                    </div>
+                  }
+                />
                 <Route
                   path="answer-sheet"
                   element={<AnswerSheetUploader user={this.state.user} />}

@@ -102,44 +102,45 @@ class Results extends Component {
           </div>
         </section>
 
-        <section>
-          <h1>Answer Sheets</h1>
-          <div className="content">
-            <table>
-              <tbody>
-                <tr>
-                  <th>Id</th>
-                  <th>Marks</th>
-                  <th>Action</th>
-                </tr>
-                {this.state.answerSheets &&
-                  this.state.answerSheets.map((elem, key) => {
-                    return (
-                      <tr key={key}>
-                        <td>{elem.id}</td>
-                        <td>
-                          {elem.marks.length > 0 ? (
-                            elem.marks.reduce((total, mark) => {
-                              total += mark;
-                              return total;
-                            }, 0)
-                          ) : (
-                            <i style={{ color: "gray" }}>Not yet reviewed</i>
-                          )}
-                        </td>
-                        <td>
-                          <button
-                            className="green mini-btn"
-                            onClick={async (e) => {
-                              e.target.disabled = "true";
-                              await this.handleView(elem.id);
-                              e.target.disabled = undefined;
-                            }}
-                          >
-                            View
-                          </button>
-                        </td>
-                        {/* <td>
+        {this.state.answerSheets && (
+          <section>
+            <h1>Answer Sheets</h1>
+            <div className="content">
+              <table>
+                <tbody>
+                  <tr>
+                    <th>Id</th>
+                    <th>Marks</th>
+                    <th>Action</th>
+                  </tr>
+                  {this.state.answerSheets.length > 0 ? (
+                    this.state.answerSheets.map((elem, key) => {
+                      return (
+                        <tr key={key}>
+                          <td>{elem.id}</td>
+                          <td>
+                            {elem.marks.length > 0 ? (
+                              elem.marks.reduce((total, mark) => {
+                                total += mark;
+                                return total;
+                              }, 0)
+                            ) : (
+                              <i style={{ color: "gray" }}>Not yet reviewed</i>
+                            )}
+                          </td>
+                          <td>
+                            <button
+                              className="green mini-btn"
+                              onClick={async (e) => {
+                                e.target.disabled = "true";
+                                await this.handleView(elem.id);
+                                e.target.disabled = undefined;
+                              }}
+                            >
+                              View
+                            </button>
+                          </td>
+                          {/* <td>
                       <button
                         onClick={async (e) => {
                           e.target.disabled = "true";
@@ -150,13 +151,19 @@ class Results extends Component {
                         Delete
                       </button>
                     </td> */}
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
-        </section>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colspan="3" width="99%" style={{color: "silver"}}>None</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
       </React.Fragment>
     );
   }

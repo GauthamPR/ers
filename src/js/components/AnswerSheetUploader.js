@@ -1,19 +1,20 @@
 import axios from "axios";
 import React, { Component } from "react";
 
+let defaultState = {
+  selectedFile: null,
+  studentRollNo: "",
+  selectedExamId: "",
+  exams: [],
+  enableUploadBtn: false,
+  buttonText: "Upload",
+};
+
 class AnswerSheetUploader extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    
-    this.state = {
-      // Initially, no file is selected
-      selectedFile: null,
-      studentRollNo: "",
-      selectedExamId: "",
-      exams: [],
-      enableUploadBtn: false,
-      buttonText: "Upload",
-    };
+
+    this.state = defaultState;
   }
 
   attemptEnableUploadBtn = () => {
@@ -71,9 +72,9 @@ class AnswerSheetUploader extends Component {
     // Request made to the backend api
     // Send formData object
     let res = await axios.put("api/answerSheet", formData);
-      this.setState({
-        buttonText: "Upload successful",
-      });
+    this.setState({
+      buttonText: "Upload successful",
+    });
   };
 
   // File content to be displayed after
@@ -105,9 +106,10 @@ class AnswerSheetUploader extends Component {
   // };
 
   async componentDidMount() {
-    if(this.props.user){
+    if (this.props.user) {
       let res = await axios.get("/api/exams");
       this.setState({ exams: res.data.exams });
+      defaultState.exams = res.data.exams;
     }
   }
 
@@ -121,7 +123,11 @@ class AnswerSheetUploader extends Component {
               <div className="form">
                 <label>
                   Answer Sheet
-                  <input type="file" onChange={this.onFileChange} />
+                  <input
+                    id="ans-upload"
+                    type="file"
+                    onChange={this.onFileChange}
+                  />
                 </label>
                 <label>
                   Exam
@@ -149,13 +155,26 @@ class AnswerSheetUploader extends Component {
                     value={this.state.studentRollNo}
                   />
                 </label>
+              </div>
+              <div className="btn-holder">
                 <label>
+                  <label>
+                    <button
+                      className="blue-btn"
+                      disabled={!this.state.enableUploadBtn}
+                      onClick={this.onFileUpload}
+                    >
+                      {this.state.buttonText}
+                    </button>
+                  </label>
                   <button
-                    className="blue-btn"
-                    disabled={!this.state.enableUploadBtn}
-                    onClick={this.onFileUpload}
+                    className="orange-btn"
+                    onClick={() => {
+                      document.getElementById("ans-upload").value = "";
+                      this.setState(defaultState);
+                    }}
                   >
-                    {this.state.buttonText}
+                    Reset
                   </button>
                 </label>
               </div>

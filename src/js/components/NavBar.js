@@ -74,14 +74,16 @@ class NavBar extends React.Component {
       },
     ];
 
-    navs = navs.map((elem) => {
-      elem.permissions.forEach((perm) => {
-        if (this.props.user.permissions.indexOf(perm) != -1) {
-          elem.display = true;
-        }
-      });
-      return elem;
-    });
+    navs = this.props.user
+      ? navs.map((elem) => {
+          elem.permissions.forEach((perm) => {
+            if (this.props.user.permissions.indexOf(perm) != -1) {
+              elem.display = true;
+            }
+          });
+          return elem;
+        })
+      : null;
 
     this.state = {
       navs,
@@ -91,40 +93,61 @@ class NavBar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.props.user && (
-          <nav style={navStyle}>
-            <ul style={navUlStyle}>
-              {this.props.user &&
-                this.state.navs &&
-                this.state.navs.map((e) => {
-                  return (
-                    e.display && (
-                      <li className="hover-anim" key={e.url} style={navUlLi}>
-                        <Link style={navUlLiA} to={e.url}>
-                          {e.name}
-                        </Link>
-                      </li>
-                    )
-                  );
-                })}
-            </ul>
-            <a
-              className="hover-red"
+        <nav style={navStyle}>
+          {!this.props.user && (
+            <ul
               style={{
-                height: "100%",
-                padding: "0px 22px",
-                backgroundColor: "black",
-                textDecoration: "none",
-                display: "grid",
-                placeItems: "center",
-                letterSpacing: "1px",
+                display: "flex",
+                width: "100%",
+                alignItems: "stretch",
+                justifyContent: "end",
+                padding: 0,
+                margin: 0,
               }}
-              href="/api/logout"
             >
-              Logout
-            </a>
-          </nav>
-        )}
+              <Link to="/public/connect">
+                <button className="blue-btn">Connect</button>
+              </Link>
+            </ul>
+          )}
+          {this.props.user && (
+            <React.Fragment>
+              <ul style={navUlStyle}>
+                <Link to="/dashboard">
+                  <img height={navStyle.height} src="/images/logo.jpg" />
+                </Link>
+                {this.props.user &&
+                  this.state.navs &&
+                  this.state.navs.map((e) => {
+                    return (
+                      e.display && (
+                        <li className="hover-anim" key={e.url} style={navUlLi}>
+                          <Link style={navUlLiA} to={e.url}>
+                            {e.name}
+                          </Link>
+                        </li>
+                      )
+                    );
+                  })}
+              </ul>
+              <a
+                className="hover-red"
+                style={{
+                  height: "100%",
+                  padding: "0px 22px",
+                  backgroundColor: "black",
+                  textDecoration: "none",
+                  display: "grid",
+                  placeItems: "center",
+                  letterSpacing: "1px",
+                }}
+                href="/api/logout"
+              >
+                Logout
+              </a>
+            </React.Fragment>
+          )}
+        </nav>
       </React.Fragment>
     );
   }

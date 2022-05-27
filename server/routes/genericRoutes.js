@@ -80,6 +80,6 @@ module.exports = function (app, contract) {
 
   app.route("/api/logout").get((req, res) => {
     req.logout();
-    res.sendStatus(200);
+    res.redirect("/public");
   });
 };

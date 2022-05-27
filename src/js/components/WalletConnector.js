@@ -59,7 +59,7 @@ class WalletConnector extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.account) this.props.navigate("/login");
+    if (this.props.account) this.props.navigate("/public/login");
   }
 
   render() {
