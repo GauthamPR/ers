@@ -12,6 +12,6 @@ module.exports = function (str) {
     cipher.update(str.toUpperCase(), "utf8", "hex") + cipher.final("hex");
 
   // Hashing
-  let hash = crypto.createHash("md5").update(encrypted).digest("hex");
+  let hash = crypto.createHash("sha256").update(encrypted).digest("hex");
   return hash;
 };
